@@ -3,6 +3,7 @@ import Dashboard from '../views/Dashboard.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import DefaultLayout from '../components/DefaultLayout.vue';
+import AuthLayout from '../components/AuthLayout.vue';
 import Surveys from '../views/Surveys.vue';
 import store from '../store';
 
@@ -19,15 +20,23 @@ const routes = [
   },
 
   {
-    path: '/login',
-    name: 'Login',
-    component: Login
-  },
+    path: '/auth',
+    redirect: '/login',
+    name: 'Auth',
+    component: AuthLayout,
+    children: [
+      {
+        path: '/login',
+        name: 'Login',
+        component: Login
+      },
 
-  {
-    path: '/register',
-    name: 'Register',
-    component: Register
+      {
+        path: '/register',
+        name: 'Register',
+        component: Register
+      },
+    ]
   },
 ];
 
@@ -39,7 +48,13 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !store.state.user.token){
     next({name: 'Login'})
-  } else {
+  }
+  else if (store.state.user.token && (to.name === 'Login' || to.name === 'Register'))
+  {
+    next({name: 'Dashboard'});
+  }
+  else
+  {
     next();
   }
 })
