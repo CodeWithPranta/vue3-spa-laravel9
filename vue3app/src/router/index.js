@@ -10,7 +10,8 @@ import store from '../store';
 const routes = [
   {
     path: '/',
-    name: 'Dashboard',
+    redirect: '/dashboard',
+    name: 'Home',
     component: DefaultLayout,
     meta: {requiresAuth: true},
     children: [
